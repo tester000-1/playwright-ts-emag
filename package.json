@@ -1,0 +1,17 @@
+{
+  "name": "playwright-emag-nodejs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "Martin Atanasov",
+  "license": "ISC",
+  "description": "playwright, node.js project for Emag's website",
+  "devDependencies": {
+    "@playwright/test": "^1.48.2",
+    "@types/node": "^22.7.9"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
