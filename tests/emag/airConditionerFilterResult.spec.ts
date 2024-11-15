@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { Timeout } from "../../utils/Timeout";
-import { Browser } from "../../utils/Browser";
+import { Browser } from "../../framework/Browser";
 import { ProductTestID } from "../../utils/ProductsTestID";
 import Utils from "../../utils/Utils";
 import CardView from '../../page-objects/CardView';
@@ -8,24 +8,38 @@ import HomePage from '../../page-objects/HomePage';
 import TopNavigation from '../../page-objects/TopNavigation';
 import Filter from '../../page-objects/Filter';
 import Pagination from '../../page-objects/Pagination';
+import Logger from "../../framework/Logger";
 
-test('Air conditioners Filter Result', async ({ page }) => {
+const logger = new Logger('airConditionersFilterResult');
+const title = 'Air conditioners Filter Result';
+
+test.beforeAll(async () => {
+  logger.info('Test name: ' + title);
+});
+
+test.afterAll(async () => {
+  logger.info('End of the test with name: ' + title);
+});
+
+test(title, async ({ page }) => {
   const brandName = "Daikin";
-  const browser = new Browser();
-  const nav = new TopNavigation();
-  const home = new HomePage();
-  const filter = new Filter();
-  const pagination = new Pagination();
-  const card = new CardView();
+  const browser = new Browser(logger);
+  const nav = new TopNavigation(logger);
+  const home = new HomePage(logger);
+  const filter = new Filter(logger);
+  const pagination = new Pagination(logger);
+  const card = new CardView(logger);
   const utils = new Utils();
 
   await browser.visitBaseUrl(page);
   //Check Emag title
-  await expect(await page.title(),
-    'Expected title: "eMAG.bg - Широка гама продукти"')
-    .toBe('eMAG.bg - Широка гама продукти');
+  expect(await page.title(),
+      'Expected title: "eMAG.bg - Широка гама продукти"')
+      .toBe('eMAG.bg - Широка гама продукти');
   //Accept cookies and close account login banner
-  await home.acceptCookies(page);
+  await home.acceptCookies(page).click({ timeout: Timeout.MIDDLE });
+  await home.btnEnterInYourAccount(page).click({ timeout: Timeout.MIDDLE });
+  await home.btnCloseBanner(page).click({ timeout: Timeout.MIDDLE });
   //Navigate to Airconditioners
   await nav.getLinkLocator(page, 'Големи електроуреди').click({ timeout: Timeout.MIDDLE });
   await nav.getLinkLocatorExactName(page, 'Климатици', true).click({ timeout: Timeout.MIDDLE });
@@ -42,6 +56,7 @@ test('Air conditioners Filter Result', async ({ page }) => {
     filter.getButtonFilter(page),
     'Expected button "Филтрирай" to be presented'
   ).toBeVisible({ timeout: Timeout.EXTENSIVE });
+  await filter.getButtonFilter(page)
   await filter.getButtonFilter(page).click({ timeout: Timeout.SMALL });
   //Check for result title
   await expect(
@@ -51,17 +66,19 @@ test('Air conditioners Filter Result', async ({ page }) => {
   //Get all card titles from the page 1 and compare it to the brand name
 
   const cardViewPage1 = await card.getAllCardViewTitles(page);
-  // console.log('arrays ->>>> ' + (await page.locator('//h2[@class="card-v2-title-wrapper"]').all()).length)
-  // await expect(
-  //   await card.getAllCardViewTitles(page).length == 60,
-  //   'Expected result: CardView to have 60 items'
-  // ).toBeTruthy();
+  logger.debug('arrays ->>>> ' + await card.getCardsCount(page));
+  const itemCount = await card.getCardsCount(page);
+  //const itemCount = (await page.locator('//h2[@class="card-v2-title-wrapper"]').all()).length;
+  expect(
+      itemCount == 60,
+      'Expected result: CardView to have 60 items, Actual result ' + itemCount
+  ).toBeTruthy();
 
   for (let i = 1; i <= cardViewPage1.length; i++) {
-    const cardFragment = await card.getCardViewFragment(page, i);
+    const cardFragment = card.getCardViewFragment(page, i);
     const titleText: string = await cardFragment.getCardViewTitleByIndex();
-    await expect(titleText.toLowerCase()).toContain(brandName.toLowerCase());
-    console.log('--------- i : ' + i)
+    expect(titleText.toLowerCase()).toContain(brandName.toLowerCase());
+    logger.debug('--------- i : ' + i)
   }
   //Navigate to page 2
   await expect(
@@ -77,20 +94,20 @@ test('Air conditioners Filter Result', async ({ page }) => {
   //Get all card titles from the page 2 and compare it to the brand name
   const cardViewPage2 = await card.getAllCardViewTitles(page);
   for (let i = 1; i <= cardViewPage2.length; i++) {
-    const cardFragment = await card.getCardViewFragment(page, i);
+    const cardFragment = card.getCardViewFragment(page, i);
     const titleText: string = await cardFragment.getCardViewTitleByIndex();
-    await expect(titleText.toLowerCase()).toContain(brandName.toLowerCase());
-    console.log('--------- i2 : ' + i)
+    expect(titleText.toLowerCase()).toContain(brandName.toLowerCase());
+    logger.debug('--------- i2 : ' + i)
   }
   //Sort the products price (Цена възх.)
-  browser.scrollTop(page);
+  await browser.scrollTop(page);
   await expect(
     filter.getDropdownSortingButton(page),
     'Expected dropdown select to be presented'
   ).toBeVisible({ timeout: Timeout.HUGE });
   await filter.getDropdownSortingButton(page).click({ timeout: Timeout.MIDDLE, force: true });
   await expect(
-    filter.getDropdowsSelectFromLowToHigh(page),
+    filter.getDropdownSelectFromLowToHigh(page),
     'Expected dropdown select "Цена възх" to be presented'
   ).toBeVisible({ timeout: Timeout.EXTENSIVE });
   await filter.getDropdownSelectFromLowToHighLink(page).first().click({ timeout: Timeout.MIDDLE, force: true });
@@ -103,29 +120,16 @@ test('Air conditioners Filter Result', async ({ page }) => {
   const cardPrice = await card.getAllCardViewPrices(page);
   let oldPrice: number = 0;
   for (let i = 1; i <= cardPrice.length; i++) {
-    const cardFragment = await card.getCardViewFragment(page, i);
+    const cardFragment = card.getCardViewFragment(page, i);
     const priceText: string = await cardFragment.getCardViewPriceByIndex();
     const data: string = utils.convertStringPriceToInt(priceText).toLowerCase();
     const newPrice: number = parseInt(data);
-    console.log(" newPrice: " + newPrice)
+    logger.debug("newPrice: " + newPrice);
     const validPrice: boolean = newPrice === oldPrice || newPrice > oldPrice;
-    console.log(`new price: ${newPrice} | old price: ${oldPrice}`)
-    await expect(validPrice).toBeTruthy();
-    console.log(i + " true: " + validPrice)
+    logger.debug(`new price: ${newPrice} | old price: ${oldPrice}`)
+    expect(validPrice).toBeTruthy();
+    logger.debug(i + " true: " + validPrice);
     oldPrice = newPrice;
-
-
-    //console.log('old price ' + oldPrice)
-    //console.log('index ' + element)
-    //const data: string = utils.convertStringPriceToInt(await element.innerText());
-    //console.log( " data: " + data)
-    //const newPrice: number = parseInt(data);
-    //console.log( " newPrice: " + newPrice)
-    //const validPrice: boolean = newPrice === oldPrice || newPrice > oldPrice;
-    //console.log(`new price: ${newPrice} | owd price: ${oldPrice}`)
-    //await expect(validPrice).toBeTruthy();
-    //console.log(element + " true: " + validPrice)
-    //oldPrice = newPrice;
   }
 
 });
@@ -140,4 +144,4 @@ Step: Under the section “Производител” click “виж пове�
 Expected result: Verify that each search result on the first 2 pages contains the word “Daikin” in its title.
 Step: Sort the results by price in descending order from high to low.
 Expected result: The price of products in the results (from top to bottom) should be equal to or higher than the price of the following product.
- */
+*/

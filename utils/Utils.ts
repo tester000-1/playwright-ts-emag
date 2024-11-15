@@ -1,3 +1,5 @@
+import { compareAsc, format } from "date-fns";
+
 class Utils {
 
     convertStringPriceToInt(value){
@@ -5,6 +7,10 @@ class Utils {
             .replace("лв.", "")
             .replace(",", "")
             .replace(".", "");
+    }
+
+    getTimeNow(){
+        return format(new Date(), "yyyy-MM-dd HH:mm:ss.SSS");
     }
 
 }

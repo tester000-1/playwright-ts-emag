@@ -8,10 +8,12 @@
   "license": "ISC",
   "description": "playwright, node.js project for Emag's website",
   "devDependencies": {
-    "@playwright/test": "^1.48.2",
+    "@playwright/test": "^1.48.1",
     "@types/node": "^22.7.9"
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.4.5",
+    "log4js": "^6.9.1"
   }
 }
