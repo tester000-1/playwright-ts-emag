@@ -1,6 +1,7 @@
 import BaseElement from "../BaseElement";
 import { expect } from '@playwright/test';
-import {Logger} from "log4js";
+import Logger from "../Logger";
+
 
 class Link extends BaseElement {
 

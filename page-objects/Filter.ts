@@ -1,6 +1,7 @@
 
 import Link from "../framework/components/Link";
-import {Logger} from "log4js";
+import Logger from "../framework/Logger";
+
 
 class Filter {
     private readonly logger: Logger;

@@ -1,4 +1,4 @@
-import {Logger} from "log4js";
+import Logger from "../framework/Logger";
 
 class Pagination {
 

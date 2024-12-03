@@ -1,7 +1,8 @@
 import { expect } from '@playwright/test';
 import BaseElement from "../BaseElement";
 import { Timeout } from "../../utils/Timeout";
-import {Logger} from "log4js";
+import Logger from "../Logger";
+
 
 class Button extends BaseElement {
 

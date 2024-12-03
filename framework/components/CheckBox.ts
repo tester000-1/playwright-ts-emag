@@ -1,5 +1,6 @@
 import BaseElement from "../BaseElement";
-import {Logger} from "log4js";
+import Logger from "../Logger";
+
 
 class Checkbox extends BaseElement {
 

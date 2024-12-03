@@ -1,5 +1,4 @@
 import BasePage from "./BasePage";
-import logger from "../framework/Logger";
 
 class HomePage extends BasePage{
 
