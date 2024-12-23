@@ -6,28 +6,30 @@ import Logger from "./Logger";
 export class Browser {
 
     private logger: Logger;
+    private page: Page;
 
-    constructor(logger: Logger) {
+    constructor(logger: Logger, page: Page) {
         this.logger = logger;
+        this.page = page;
     }
 
-    async visitBaseUrl(page: Page) {
+    async visitBaseUrl() {
         this.logger.debug('Navigated to page: "' + process.env.BASE_URL + '"');
-        await page.goto(process.env.BASE_URL);
+        await this.page.goto(process.env.BASE_URL);
     }
 
-    async openPageView(page, path) {
+    async openPage(path) {
         this.logger.debug('Navigated to page: "' + process.env.BASE_URL + path + '"');
-        await page.goto(process.env.BASE_URL + path);
+        await this.page.goto(process.env.BASE_URL + path);
     }
 
-    async scrollTop(page) {
+    async scrollToTop() {
         this.logger.debug('Scroll to the Top of the page');
-        await page.evaluate(() => window.scroll(0, 0));
+        await this.page.evaluate(() => window.scroll(0, 0));
     }
 
-    async scrollUntilVisible(page, selector) {
-        await page.evaluate(() => window.scroll(0, 1800));
+    async scrollToCoordinates(xCoordinate: number, yCoordinate: number) {
+        await this.page.evaluate(() => window.scroll(xCoordinate, yCoordinate));
     }
 
 }

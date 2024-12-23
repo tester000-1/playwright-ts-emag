@@ -13,6 +13,9 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+  // Config Playwright to execute test with keyword 'test' instead of 'spec'
+  //testMatch: '*.test.ts',
+
   /* expect timeout */
   expect: {
     timeout: 12000
@@ -40,6 +43,7 @@ export default defineConfig({
     baseURL: process.env.BASE_URL,
 
     screenshot: 'only-on-failure',
+    video: 'off',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',

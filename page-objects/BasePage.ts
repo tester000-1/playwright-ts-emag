@@ -1,35 +1,41 @@
-
 import Button from "../framework/components/Button";
+import {Page} from "@playwright/test";
+
 
 abstract class BasePage {
 
     protected logger: any;
+    protected page: Page;
+    protected btnAcceptCookies: Button;
+    protected btnCloseEnterInYourAccount: Button;
+    protected btnCloseBanner: Button;
 
-    constructor(logger: any) {
+    constructor(logger: any, page: Page) {
+        this.page = page;
         this.logger = logger;
+        this.btnAcceptCookies = new Button('Button "Приеми всички"', this.page.getByRole('button', { name: 'Приеми всички' }), this.logger);
+        this.btnCloseEnterInYourAccount = new Button('Button "close your account"', this.page.getByRole('button', {name: ''}).nth(1), this.logger);
+        this.btnCloseBanner = new Button('Button "close banner"', this.page.getByRole('button', { name: '' }).first(), this.logger);
     }
 
-    acceptCookies(page){
-        const button = new Button('Create button "Приеми всички"', page.getByRole('button', { name: 'Приеми всички' }), this.logger);
-        return button.getLocator();
+    async acceptCookies(){
+        await this.btnAcceptCookies.click();
     }
 
-    btnEnterInYourAccount(page){
-        const button = new Button('Create button "close your account"', page.getByRole('button', { name: '' }).nth(1), this.logger);
-        return button.getLocator();
+    async closeEnterInYourAccount(){
+        await this.btnCloseEnterInYourAccount.click();
     }
 
-    btnCloseBanner(page){
-        const button = new Button('Create button "close banner"', page.getByRole('button', { name: '' }).first(), this.logger);
-        return button.getLocator();
+    async closeBanner(){
+        await this.btnCloseBanner.click();
     }
 
-    getTextElement(page, text){
-        return page.getByText(text);
+    async getTextElement(text){
+        return this.page.getByText(text);
     }
 
-    getH1WithText(page, text: string){
-        return page.locator(`//h1[text()="${text}"]`);
+    async getProductHeader(text: string){
+        return this.page.locator(`//h1[text()="${text}"]`);
     }
 
 }

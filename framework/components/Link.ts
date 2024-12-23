@@ -1,6 +1,8 @@
 import BaseElement from "../BaseElement";
 import { expect } from '@playwright/test';
 import Logger from "../Logger";
+import logger from "../Logger";
+import {Timeout} from "../../utils/Timeout";
 
 
 class Link extends BaseElement {
@@ -8,16 +10,6 @@ class Link extends BaseElement {
     constructor(name: string, locator: any, logger: Logger){
         super(name, locator, logger);
     }
-
-    getLink(){
-        return this.locator;
-    }
-
-    linkIsVisible(): boolean {
-        this.logger.info('Check if the link is visible');
-        return this.locator.isVisible();
-    }
-    
 
 }
 

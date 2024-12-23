@@ -8,14 +8,11 @@ class RadioButton extends BaseElement {
         super(name, locator, logger);
     }
 
-    isEnabled(): boolean{
-        this.logger.info('Check if RadioButton is Enabled');
-        return this.locator.isEnabled();
-    }
-
-    isChecked(): boolean {
-        this.logger.info('Check if RadioButton is Checked');
-        return this.locator.isChecked();
+    async isChecked() {
+        this.logger.debug(`Check if RadioButton: ${this.name} is Checked`);
+        const isChecked = await this.locator.isChecked();
+        this.logger.debug(`Check if RadioButton: ${this.name} is Checked: ${isChecked}`);
+        return await isChecked;
     }
     
 

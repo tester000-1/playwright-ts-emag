@@ -1,26 +1,21 @@
 import BaseElement from "../BaseElement";
 import Logger from "../Logger";
 
-
 class Dropdown extends BaseElement {
 
-    private selectOption: any;
-
-    constructor(name: string, locator: any, logger: Logger, selectOption: any) {
+    constructor(name: string, locator: any, logger: Logger){
         super(name, locator, logger);
-        this.selectOption = selectOption;
     }
 
-    dropdownIsVisible(): boolean {
-        this.logger.info('Check if dropdown is visible');
-        return this.locator.isVisible();
+    async selectOption(option: string | string[]){
+        this.logger.debug(`Select dropdown option: ${option.toString()}`);
+        await this.locator.selectOption(option);
     }
 
-    selectIsVisible(): boolean {
-        this.logger.info('Check if select option is visible');
-        return this.selectOption.isVisible();
+    async selectOptionByLabel(option: string) {
+        this.logger.debug(`Select dropdown option by label: ${option}`);
+        await this.locator.selectOption({ label: option });
     }
-
 
 }
 

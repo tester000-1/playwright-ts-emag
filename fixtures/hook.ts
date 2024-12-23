@@ -1,17 +1,23 @@
 import { test as base } from "@playwright/test";
 import Logger from "../framework/Logger";
+import {Log4jsConfiguration} from "../framework/Log4jsConfiguration";
+const path = require('path');
 
 export const test = base.extend<{ testHook: void }>({
     testHook: [
         async ({}, use, testInfo) => {
             const titlePath = testInfo.titlePath;
-            const testFullName = titlePath[0].split('\\');
+            const testFullName = titlePath[0].toString();
+            let testShortName = path.basename(testFullName);
 
-            const SUFFIX_NAME_CHARACTERS = -8;
-            const testShortName =  testFullName[testFullName.length -1].slice(0, SUFFIX_NAME_CHARACTERS);
+            if (testShortName.includes('.ts') || testShortName.includes('.js')){
+                testShortName = testShortName.replace('.ts', '')
+                .replace('.js', '')
+                .replace('.spec', '');
+            }
 
+            Log4jsConfiguration.configureLogging(testShortName);
             const logger = Logger.getInstance(testShortName);
-            Logger.loggerConfig();
 
             logger.info("Test name: " + testInfo.title);
             // Any code here will be run as a before each hook

@@ -11,36 +11,36 @@ const logger = Logger.getInstance('socialMediaLinks');
 const title = 'Social media links';
 
 test(title, async ({ page }) => {
-  const socialMediaPage = new SocialMediaPage(logger);
-  const browser = new Browser(logger);
-  const home = new HomePage(logger);
+  const socialMediaPage = new SocialMediaPage(logger, page);
+  const browser = new Browser(logger, page);
+  const home = new HomePage(logger, page);
 
   await allure.step("Visit Emag and accept cookies", async () => {
-    Logger.logStep("Visit Emag and accept cookies");
-    await browser.visitBaseUrl(page);
-    await home.acceptCookies(page).click({ timeout: Timeout.MIDDLE });
-    await home.btnEnterInYourAccount(page).click({ timeout: Timeout.MIDDLE });
-    await home.btnCloseBanner(page).click({ timeout: Timeout.MIDDLE });
+    logger.logStep("Visit Emag and accept cookies");
+    await browser.visitBaseUrl();
+    await home.acceptCookies();
+    await home.closeEnterInYourAccount();
+    await home.closeBanner();
   });
   await allure.step("Open a new tab to FB social network", async () => {
-    Logger.logStep("Open a new tab to FB social network");
-    const page1Promise = page.waitForEvent('popup');
-    await socialMediaPage.getFacebookLink(page).click();
+    logger.logStep("Open a new tab to FB social network");
+    const page1Promise = page.waitForEvent('popup', {timeout: Timeout.EXTRA_EXTENSIVE});
+    await socialMediaPage.clickFacebookLink();
     const page1 = await page1Promise;
     //https://www.facebook.com/eMAGbg
     expect(
         page1.url(),
         'Open new tab to FB social network'
-    ).toEqual(process.env.FACEBOOK)
+    ).toEqual("https://www.facebook.com/eMAGbg")
     await page1.close();
   });
   await allure.step("Open a new tab to Youtube social network", async () => {
-    Logger.logStep("Open a new tab to Youtube social network");
-    const page2Promise = page.waitForEvent('popup');
-    await socialMediaPage.getYoutubeLink(page).click();
+    logger.logStep("Open a new tab to Youtube social network");
+    const page2Promise = page.waitForEvent('popup', {timeout: Timeout.EXTRA_EXTENSIVE});
+    await socialMediaPage.clickYoutubeLink();
     const page2 = await page2Promise;
-    await socialMediaPage.getAcceptCookiesYouTube(page2).click();
-    const youtubeVerifier: boolean = page2.url().includes('' + process.env.YOUTUBE)
+    await socialMediaPage.acceptCookiesYouTube(page2);
+    const youtubeVerifier: boolean = page2.url().includes("https://www.youtube.com/channel/UC5y5r9BY5IiT4MkBrMtZRnA")
     expect(
         youtubeVerifier,
         'Expected correct URL for Youtube to be presented'
@@ -49,17 +49,17 @@ test(title, async ({ page }) => {
     await page2.close();
   });
   await allure.step("Open a new tab to Instagram social network", async () => {
-    Logger.logStep("Open a new tab to Instagram social network");
+    logger.logStep("Open a new tab to Instagram social network");
     const page3Promise = page.waitForEvent('popup');
-    await socialMediaPage.getInstagramLink(page).click({timeout: Timeout.MIDDLE});
+    await socialMediaPage.clickInstagramLink(page, {timeout: Timeout.MIDDLE});
     const page3 = await page3Promise;
     //https://www.instagram.com/emag.bg_official/
-    // await socialMediaPage.acceptAllCookiesInstagram(page3).click({timeout: Timeout.EXTRA_EXTENSIVE});
-    // await socialMediaPage.acceptCookiesCloseBtnInstagram(page3).click({timeout: Timeout.MIDDLE});
+    await socialMediaPage.acceptAllCookiesInstagram(page3, {timeout: Timeout.EXTRA_EXTENSIVE});
+    await socialMediaPage.acceptCookiesCloseBtnInstagram(page3,{timeout: Timeout.MIDDLE});
     expect(
         page3.url(),
         'Expected correct URL for Instagram to be presented'
-    ).toEqual(process.env.INSTAGRAM);
+    ).toEqual("https://www.instagram.com/emag.bg_official/");
   });
 
 });

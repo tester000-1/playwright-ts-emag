@@ -1,50 +1,64 @@
 import BasePage from "./BasePage";
 import Link from "../framework/components/Link";
 import Button from "../framework/components/Button";
+import {Page} from "@playwright/test";
+import Logger from "../framework/Logger";
 
 
 class SocialMediaPage extends BasePage {
 
-    constructor(logger: any) {
-        super(logger);
+    private facebookLink: Link;
+    private youtubeLink: Link;
+    private instagramLink: Link;
+    private acceptCookiesYoutube: Button;
+    private acceptCookiesInstagram: Button;
+    private closeCookiesInstagram: Button;
+
+    constructor(logger: Logger, page: Page) {
+        super(logger, page);
+        this.facebookLink = new Link('create FB link', this.page.getByRole('link', {name: ''}), this.logger);
+        this.youtubeLink = new Link('create Youtube link', this.page.getByRole('link', {name: ''}), this.logger);
+        this.instagramLink = new Link('create Instagram link', this.page.getByRole('link', {name: ''}), this.logger);
+        this.acceptCookiesYoutube = new Button('create locator Accept Cookies Youtube', page.getByRole('button', {name: 'Accept all'}), this.logger);
+        this.acceptCookiesInstagram = new Button('create locator Accept All Cookies Instagram', page.getByRole('button', {name: 'Allow all cookies'}), this.logger);
+        this.closeCookiesInstagram = new Button('create locator Accept Cookies Close btn Instagram', page.getByRole('button', {name: 'Close'}), this.logger);
     }
 
-    getFacebookLink(page) {
-        this.logger.info('return FB link');
-        const link = new Link('create FB link', page.getByRole('link', {name: ''}), this.logger);
-        return link.getLink();
+    async setPage(page: Page){
+        this.page = page;
     }
 
-    getYoutubeLink(page) {
-        this.logger.info('return Youtube link');
-        const link = new Link('create Youtube link', page.getByRole('link', {name: ''}), this.logger);
-        return link.getLink();
+    async clickFacebookLink() {
+        this.logger.debug('click FB link');
+        await this.facebookLink.click();
     }
 
-    getInstagramLink(page) {
-        this.logger.info('return Instagram link');
-        const link = new Link('create Instagram link', page.getByRole('link', {name: ''}), this.logger);
-        return link.getLink();
+    async clickYoutubeLink() {
+        this.logger.debug('click Youtube link');
+        await this.youtubeLink.click();
     }
 
-    getAcceptCookiesYouTube(page) {
-        this.logger.info('return locator Accept Cookies Youtube');
-        const button = new Button('create locator Accept Cookies Youtube', page.getByRole('button', {name: 'Accept all'}), this.logger);
-        return button.getLocator();
+    async clickInstagramLink(page, timeout?) {
+        this.logger.debug('click Instagram link');
+        await this.setPage(page);
+        await this.instagramLink.click(timeout);
     }
 
-    acceptAllCookiesInstagram(page) {
-        this.logger.info('return locator Accept All Cookies Instagram');
-        const button = new Button('create locator Accept All Cookies Instagram', page.getByRole('button', {name: 'Allow all cookies'}), this.logger);
-        return button.getLocator();
+    async acceptCookiesYouTube(page: Page, timeout?) {
+        await this.setPage(page);
+        await this.acceptCookiesYoutube.setLocator(page.getByRole('button', {name: 'Accept all'}))
+        await this.acceptCookiesYoutube.click(timeout);
     }
 
-    acceptCookiesCloseBtnInstagram(page) {
-        this.logger.info('return locator Accept Cookies Close btn Instagram');
-        const button = new Button('create locator Accept Cookies Close btn Instagram', page.getByRole('button', {name: 'Close'}), this.logger);
-        return button.getLocator();
+    async acceptAllCookiesInstagram(page: Page, timeout?) {
+        await this.acceptCookiesInstagram.setLocator(page.getByRole('button', {name: 'Allow all cookies'}))
+        await this.acceptCookiesInstagram.click(timeout);
     }
 
+    async acceptCookiesCloseBtnInstagram(page, timeout?) {
+        await this.closeCookiesInstagram.setLocator(page.getByRole('button', {name: 'Close'}))
+        await this.closeCookiesInstagram.click(timeout);
+    }
 
 }
 

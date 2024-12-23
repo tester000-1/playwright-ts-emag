@@ -5,10 +5,10 @@ node_modules/
 /playwright/.cache/
 commands.txt
 .idea
-.gitignore
 test-examples/
-log-results/
+logs/
 allure-report/
 allure-results/
 tests-examples/
+tests/hook/
 

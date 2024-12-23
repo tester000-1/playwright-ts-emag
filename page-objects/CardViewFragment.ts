@@ -1,5 +1,6 @@
 import { Page } from "@playwright/test";
 import {Logger} from "log4js";
+import {Timeout} from "../utils/Timeout";
 
 class CardViewFragment {
 
@@ -13,14 +14,31 @@ class CardViewFragment {
         this.logger = logger;
     }
 
-    getCardViewTitleByIndex() {
+    async getProductTitle() {
         this.logger.debug(`Get card view title by Index: (//div[@id="card_grid"]//h2[@class="card-v2-title-wrapper"])[${this.index}]`);
-        return this.page!.locator(`(//div[@id="card_grid"]//h2[@class="card-v2-title-wrapper"])[${this.index}]`).innerText();
+        return await this.page!.locator(`(//div[@id="card_grid"]//h2[@class="card-v2-title-wrapper"])[${this.index}]`).innerText();
     }
 
-    getCardViewPriceByIndex() {
+    async getFinalPrice() {
         this.logger.debug(`Get card view price by Index: (//div[@id="card_grid"]//p[@class="product-new-price"])[${this.index}]`);
-        return this.page!.locator(`(//div[@id="card_grid"]//p[@class="product-new-price"])[${this.index}]`).innerText();
+        return await this.page!.locator(`(//div[@id="card_grid"]//p[@class="product-new-price"])[${this.index}]`).innerText();
+    }
+
+    async getOldPrice() {
+        this.logger.debug(`Get card view old price by Index: (//div[@id="card_grid"]//p[@class[contains(., "pricing")]])[${this.index}]`);
+        const loc = this.page!.locator(`(//div[@id="card_grid"]//p[@class[contains(., "pricing")]])[${this.index}]`);
+
+        const isVisible = await loc.isVisible({timeout: Timeout.SMALL});
+        if(!isVisible){
+            return "none";
+        }
+        let text: any = await this.page.locator(`(//div[@id="card_grid"]//p[@class[contains(., "pricing")]])[${this.index}]`).innerText();
+        if(text.includes("НОВО")){
+            text = text.replace("НОВО", "");
+        } else {
+            text = "none";
+        }
+        return text;
     }
 
 }

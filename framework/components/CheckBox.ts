@@ -8,9 +8,17 @@ class Checkbox extends BaseElement {
         super(name, locator, logger);
     }
 
-    isChecked(): boolean {
-        this.logger.info('Check if the button is checked');
-        return this.locator.isChecked();
+    async isChecked() {
+        this.logger.debug(`Check if the element: ${this.name} is checked`);
+        const isChecked = await this.locator.isChecked();
+        this.logger.debug(`Locator: ${this.name} is checked: ${isChecked}`);
+        return await isChecked;
+    }
+
+    async check(){
+        this.logger.debug(`Check checkbox element: ${this.name}`);
+        await this.locator.check();
+        this.logger.debug(`Checkbox element: ${this.name} is checked`);
     }
     
 

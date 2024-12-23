@@ -1,4 +1,6 @@
 import Logger from "./Logger";
+import {Timeout} from "../utils/Timeout";
+import logger from "./Logger";
 
 
 abstract class BaseElement {
@@ -13,53 +15,79 @@ abstract class BaseElement {
         this.logger = logger;
     }
 
-    waitUntilVisible(): boolean {
-        this.logger.debug('Check if the locator is valid');
-        return this.locator.waitFor('visible');
+    async setLocator(locator){
+        this.logger.debug(`Set a new locator: ${locator}`);
+        this.locator = locator;
     }
 
-    isEnabled(): boolean {
-        this.logger.debug('Check if the locator is enabled');
-        return this.locator.isEnabled();
+    async setName(name){
+        this.logger.debug(`Set a new locator's name. Old name: ${this.name}, New name: ${name}`);
+        this.name = name;
     }
 
-    isVisible(): boolean {
-        this.logger.debug('Check if the locator is visible');
-        return this.locator.isVisible();
+    async getLocator(){
+        this.logger.debug(`Return ${this.name} with locator: ${this.locator}`);
+        return await this.locator;
     }
 
-    getLocator(){
-        this.logger.debug('Return button with locator: ' + this.locator);
-        return this.locator;
+    async getName(){
+        this.logger.debug(`Get locator's name: ${this.name}`);
+        return this.name;
     }
 
-    click(){
-        this.logger.debug('Click button with locator: ' + this.locator);
-        this.locator.click();
+    async waitUntilVisible() {
+        this.logger.debug(`Wait until ${this.name} is visible`);
+        const isElementVisible = this.locator.waitFor('visible');
+        this.logger.debug(`Element with name: ${this.name} is visible: ${isElementVisible}`);
+        return isElementVisible;
     }
 
-    isClosed(){
-        return this.locator.isClosed();
+    async isEnabled() {
+        this.logger.debug(`Check if the ${this.name} is enabled`);
+        const isLocEnabled = await this.locator.isEnabled();
+        this.logger.debug(`Locator with name: ${this.name} is enabled: ${isLocEnabled}`);
+        return await isLocEnabled;
     }
 
-    isDeleted(){
-        return this.locator.isDeleted();
+    async isVisible(timeout?) {
+        this.logger.debug(`Check if the ${this.name} is visible`);
+        await this.locator.waitFor({state: "visible", timeout: Timeout.EXTRA_EXTENSIVE});
+        const isLocVisible = await this.locator.isVisible(timeout);
+        this.logger.debug(`Locator with name: ${this.name} is visible: ${isLocVisible}`);
+        return await isLocVisible;
     }
 
-    isDisabled(){
-        return this.locator.isDisabled();
+    async waitUntilAttachedToDOM(timeout?: number){
+        this.logger.debug(`Check if the ${this.name} is attached`);
+        await this.locator.waitFor({state: "attached", timeout: Timeout.EXTRA_EXTENSIVE});
+        const isAttacked = await this.locator.isVisible(timeout);
+        this.logger.debug(`Locator with name: ${this.name} is attached: ${isAttacked}`);
     }
 
-    isEditable(){
-        return this.locator.isEditable();
+    async click(timeout?){
+        this.logger.debug(`Click ${this.name} with locator: ${this.locator}`);
+        await this.locator.click(timeout);
     }
 
-    isHidden(){
-        return this.locator.isHidden();
+    async isDisabled(){
+        this.logger.debug(`Check if ${this.name} with locator: ${this.locator} is disabled`);
+        const isDisabled = await this.locator.isDisabled();
+        this.logger.debug(`Locator with name: ${this.name} with locator: ${this.locator} is disabled: ${isDisabled}`);
+        return await isDisabled;
     }
 
-    isDetached(){
-        return this.locator.isDetached();
+    async isEditable(){
+        this.logger.debug(`Check if ${this.name} with locator: ${this.locator} is editable`);
+        const isEditable = await this.locator.isEditable();
+        this.logger.debug(`Locator with name: ${this.name} with locator: ${this.locator} is editable: ${isEditable}`);
+        return await isEditable;
+    }
+
+    async isHidden(){
+        this.logger.debug(`Check if ${this.name} with locator: ${this.locator} is hidden`);
+        const isHidden = await this.locator.isHidden();
+        this.logger.debug(`Locator with name: ${this.name} with locator: ${this.locator} is hidden: ${isHidden}`);
+        return await isHidden;
     }
 
 }

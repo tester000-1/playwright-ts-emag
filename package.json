@@ -2,7 +2,9 @@
   "name": "playwright-emag-nodejs",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "gen-logs": "allure generate ./allure-results --clean"
+  },
   "keywords": [],
   "author": "Martin Atanasov",
   "license": "ISC",

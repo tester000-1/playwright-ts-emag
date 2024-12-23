@@ -1,22 +1,25 @@
 import Logger from "../framework/Logger";
+import {Page} from "@playwright/test";
 
 
 class TopNavigation {
 
     private logger: Logger;
+    private page: Page;
 
-    constructor(logger: any) {
+    constructor(logger: any, page: Page) {
         this.logger = logger;
+        this.page = page;
     }
 
-    getLinkLocator(page, title){
-        this.logger.info('Get locator by link: ' + title)
-        return page.getByRole('link', { name: title });
+    async clickLocator(title, timeout?: any){
+        this.logger.debug('Click link locator: ' + title)
+        await this.page.getByRole('link', { name: title }).click(timeout);
     }
 
-    getLinkLocatorExactName(page, title, exactName: boolean){
-        this.logger.info('Get locator by link and exact name: ' + title)
-        return page.getByRole('link', { name: title, exact: exactName });
+    async clickLinkLocatorExactName(title, exactName: boolean, timeout?: any){
+        this.logger.debug('Get locator by link and exact name: ' + title)
+        await this.page.getByRole('link', { name: title, exact: exactName }).click(timeout);
     }
 
 }

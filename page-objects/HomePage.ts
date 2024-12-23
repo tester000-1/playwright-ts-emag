@@ -1,14 +1,20 @@
 import BasePage from "./BasePage";
+import {Page} from "@playwright/test";
+import {Timeout} from "../utils/Timeout";
 
 class HomePage extends BasePage{
 
-    constructor(logger: any) {
-        super(logger);
+    constructor(logger: any, page: Page) {
+        super(logger, page);
     }
 
-    getHeadingName(page, title){
-        this.logger.info('Return element with title ' + title)
-        return page.getByRole('heading', { name: title });
+    async getHeadingName(title, timeout?){
+        this.logger.debug('Return element with title ' + title);
+        const loc = this.page.getByRole('heading', { name: title });
+        await loc.waitFor({state: "visible", timeout: Timeout.EXTRA_EXTENSIVE});
+        const isVisibleHead = await loc.isVisible(timeout);
+        this.logger.debug('Head title visibility: ' + isVisibleHead);
+        return isVisibleHead;
     }
 
 }
