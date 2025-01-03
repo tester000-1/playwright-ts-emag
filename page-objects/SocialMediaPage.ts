@@ -3,6 +3,7 @@ import Link from "../framework/components/Link";
 import Button from "../framework/components/Button";
 import {Page} from "@playwright/test";
 import Logger from "../framework/Logger";
+import {Timeout} from "../utils/Timeout";
 
 
 class SocialMediaPage extends BasePage {
@@ -38,24 +39,24 @@ class SocialMediaPage extends BasePage {
         await this.youtubeLink.click();
     }
 
-    async clickInstagramLink(page, timeout?) {
+    async clickInstagramLink(page: Page, timeout?: Timeout) {
         this.logger.debug('click Instagram link');
         await this.setPage(page);
         await this.instagramLink.click(timeout);
     }
 
-    async acceptCookiesYouTube(page: Page, timeout?) {
+    async acceptCookiesYouTube(page: Page, timeout?: Timeout) {
         await this.setPage(page);
         await this.acceptCookiesYoutube.setLocator(page.getByRole('button', {name: 'Accept all'}))
         await this.acceptCookiesYoutube.click(timeout);
     }
 
-    async acceptAllCookiesInstagram(page: Page, timeout?) {
+    async acceptAllCookiesInstagram(page: Page, timeout?: Timeout) {
         await this.acceptCookiesInstagram.setLocator(page.getByRole('button', {name: 'Allow all cookies'}))
         await this.acceptCookiesInstagram.click(timeout);
     }
 
-    async acceptCookiesCloseBtnInstagram(page, timeout?) {
+    async acceptCookiesCloseBtnInstagram(page: Page, timeout?: Timeout) {
         await this.closeCookiesInstagram.setLocator(page.getByRole('button', {name: 'Close'}))
         await this.closeCookiesInstagram.click(timeout);
     }

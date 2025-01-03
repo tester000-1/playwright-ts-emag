@@ -18,7 +18,7 @@ export class Browser {
         await this.page.goto(process.env.BASE_URL);
     }
 
-    async openPage(path) {
+    async openPage(path: string) {
         this.logger.debug('Navigated to page: "' + process.env.BASE_URL + path + '"');
         await this.page.goto(process.env.BASE_URL + path);
     }

@@ -1,10 +1,11 @@
 import BaseElement from "../BaseElement";
 import Logger from "../Logger";
+import {Locator} from "@playwright/test";
 
 
 class RadioButton extends BaseElement {
 
-    constructor(name: string, locator: any, logger: Logger){
+    constructor(name: string, locator: Locator, logger: Logger){
         super(name, locator, logger);
     }
 
@@ -12,9 +13,8 @@ class RadioButton extends BaseElement {
         this.logger.debug(`Check if RadioButton: ${this.name} is Checked`);
         const isChecked = await this.locator.isChecked();
         this.logger.debug(`Check if RadioButton: ${this.name} is Checked: ${isChecked}`);
-        return await isChecked;
+        return isChecked;
     }
-    
 
 }
 

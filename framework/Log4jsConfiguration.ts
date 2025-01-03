@@ -9,13 +9,9 @@ export class Log4jsConfiguration {
         let fieldsArray: string[] = [];
         //The target means log into file
         const file = "file";
-
-        if (process.env.LOG_LEVEL === LogLevel.TRACE) {
-            fieldsArray.push(file);
-        } else {
-            fieldsArray.push("out");
-            fieldsArray.push(file);
-        }
+        const out = "out";
+        fieldsArray.push(file);
+        fieldsArray.push(out);
 
         log4js.configure({
             appenders: {
@@ -25,10 +21,10 @@ export class Log4jsConfiguration {
                         type: 'pattern',
                         pattern: '%[%d{yyyy-MM-dd hh:mm:ss} %p %m%]',
                         // %d is the timestamp, %p is the level, and %m is the message.
-                    },
+                    }
                 },
                 file: {
-                    type: "file",
+                    type: [file],
                     filename: `logs/${fileName}.log`,
                     flags: 'w',
                     maxLogSize: 224000,
@@ -40,26 +36,29 @@ export class Log4jsConfiguration {
                         // Start colored message %[
                         // End colored message %]
                     }
-                },
+                }
             },
             categories: {
                 default: {
-                    appenders: fieldsArray, level: this.getLogLevel()
+                    appenders: fieldsArray,
+                    level: this.getLogLevel()
+                },
+                consoleOnly: {
+                    appenders: [out],
+                    level: this.getLogLevel()
+                },
+                traceOnly: {
+                    appenders: [file],
+                    level: LogLevel.TRACE
                 }
-            },
+            }
         });
+
     }
 
     private static getLogLevel(): string {
         const logLevel = process.env.LOG_LEVEL;
-        if (
-            logLevel === LogLevel.TRACE ||
-            logLevel === LogLevel.DEBUG ||
-            logLevel === LogLevel.INFO ||
-            logLevel === LogLevel.WARN ||
-            logLevel === LogLevel.ERROR ||
-            logLevel === LogLevel.FATAL
-        ) {
+        if (Object.values(LogLevel).includes(logLevel as LogLevel)) {
             return logLevel;
         }
         return LogLevel.DEBUG;

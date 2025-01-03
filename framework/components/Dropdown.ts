@@ -1,9 +1,10 @@
 import BaseElement from "../BaseElement";
 import Logger from "../Logger";
+import {Locator} from "@playwright/test";
 
 class Dropdown extends BaseElement {
 
-    constructor(name: string, locator: any, logger: Logger){
+    constructor(name: string, locator: Locator, logger: Logger){
         super(name, locator, logger);
     }
 

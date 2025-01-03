@@ -1,5 +1,5 @@
 //import { test, expect } from '@playwright/test';
-import {test, expect} from "../../fixtures/hook";
+import {expect, test} from "../../fixtures/hook";
 import {Timeout} from "../../utils/Timeout";
 import {Browser} from "../../framework/Browser";
 import {ProductTestID} from "../../utils/ProductsTestID";
@@ -44,14 +44,14 @@ test(title, async ({page}, testInfo) => {
     //Navigate to Airconditioners
     await allure.step("Navigate to Airconditioners", async () => {
         logger.logStep("Navigate to Airconditioners");
-        await nav.clickLocator('Големи електроуреди', {timeout: Timeout.MIDDLE});
-        await nav.clickLinkLocatorExactName('Климатици', true, {timeout: Timeout.MIDDLE});
+        await nav.clickLocator('Големи електроуреди', Timeout.MIDDLE);
+        await nav.clickLinkLocatorExactName('Климатици', true, Timeout.MIDDLE);
     });
 
     await allure.step("Filter by brand name: " + brandName, async () => {
         logger.logStep("Filter by brand name: " + brandName);
-        await filter.expandBrandSearchFilter({timeout: Timeout.MIDDLE});
-        const isBrandVisibleOnFilter = await filter.isVisibleBrandById(ProductTestID.DAIKIN, {timeout: Timeout.SMALL});
+        await filter.expandBrandSearchFilter(Timeout.MIDDLE);
+        const isBrandVisibleOnFilter = await filter.isVisibleBrandById(ProductTestID.DAIKIN, Timeout.SMALL);
         expect(
             isBrandVisibleOnFilter,
             `Expected brand button "${ProductTestID.DAIKIN}" to be presented`
@@ -61,18 +61,20 @@ test(title, async ({page}, testInfo) => {
             await filter.isVisibleFilter(Timeout.EXTENSIVE),
             'Expected button "Филтрирай" to be presented'
         ).toEqual(true);
-        await filter.clickFilter({timeout: Timeout.SMALL});
+        await filter.clickFilter(Timeout.SMALL);
         expect(
-            await home.getHeadingName('Климатици Daikin', {timeout: Timeout.EXTENSIVE}),
+            await home.getHeadingName('Климатици Daikin', Timeout.EXTENSIVE),
             'Expected Title "Климатици Daikin" to be presented'
         ).toEqual(true);
     });
 
     await allure.step("Get all card titles from the page 1 and compare it to the brand name", async () => {
         logger.logStep("Get all card titles from the page 1 and compare it to the brand name");
+        //Wait until all card views are updated
+        await page.waitForTimeout(500)
         const cardViewPage1 = await card.getAllCardViewTitles(page);
         const itemCount = await card.getCardsCount(page);
-        const isCountCardCorrect = await itemCount === PageSize.DEFAULT_PAGINATION_NUMBER;
+        const isCountCardCorrect = itemCount === PageSize.DEFAULT_PAGINATION_NUMBER;
         expect(
             isCountCardCorrect,
             `Expected result: CardView to have ${PageSize.DEFAULT_PAGINATION_NUMBER} items, Actual result ` + itemCount
@@ -88,13 +90,13 @@ test(title, async ({page}, testInfo) => {
     await allure.step("Navigate to page 2", async () => {
         logger.logStep("Navigate to page 2");
         expect(
-            await pagination.getPageNumerLink(2, {timeout: Timeout.EXTENSIVE}),
+            await pagination.getPageNumerLink(2, Timeout.EXTENSIVE),
             'Expected pagination button for page "2" to be presented'
         ).toEqual(true);
-        await pagination.clickPageNumerLink(2, {timeout: Timeout.MIDDLE});
+        await pagination.clickPageNumerLink(2, Timeout.MIDDLE);
         //Check if the page 2 is active
         expect(
-            await pagination.isActivePageNumer(2, {timeout: Timeout.HUGE}),
+            await pagination.isActivePageNumer(2, Timeout.HUGE),
             'Expected active page with number "2" to be presented'
         ).toEqual(true);
     });

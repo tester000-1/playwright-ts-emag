@@ -1,7 +1,7 @@
 //import {test, expect} from '@playwright/test';
 import { test, expect } from "../../fixtures/hook";
 import {Timeout} from "../../utils/Timeout";
-import {Browser} from "../../framework/Browser";
+import browser, {Browser} from "../../framework/Browser";
 import {ProductTestID} from "../../utils/ProductsTestID";
 import CardView from '../../page-objects/CardView';
 import HomePage from '../../page-objects/HomePage';
@@ -11,6 +11,7 @@ import Pagination from '../../page-objects/Pagination';
 import Logger from "../../framework/Logger";
 import {PageSize} from "../../page-objects/PageSize";
 import * as allure from "allure-js-commons";
+import Utils from "../../utils/Utils";
 
 
 const logger = Logger.getInstance('mobileDevicesFilterResult');
@@ -38,8 +39,8 @@ test(title, async ({page}) => {
 
     await allure.step("Navigate to Мобилни телефони", async () => {
         logger.logStep("Navigate to Мобилни телефони");
-        await nav.clickLocator('Телефони, Таблети & Лаптопи', {timeout: Timeout.MIDDLE});
-        await nav.clickLinkLocatorExactName( 'Мобилни телефони', true, {timeout: Timeout.MIDDLE});
+        await nav.clickLocator('Телефони, Таблети & Лаптопи', Timeout.MIDDLE);
+        await nav.clickLinkLocatorExactName( 'Мобилни телефони', true, Timeout.MIDDLE);
         await expect(
             await home.getProductHeader('Мобилни телефони'),
             'Expected title: Мобилни телефони')
@@ -48,8 +49,8 @@ test(title, async ({page}) => {
 
     await allure.step("Filter for brand name: " + brandName, async () => {
         logger.logStep("Filter for brand name: " + brandName);
-        await filter.expandBrandSearchFilter({timeout: Timeout.MIDDLE});
-        const isProductVisible = await filter.isVisibleBrandById(ProductTestID.SAMSUNG, {timeout: Timeout.EXTENSIVE});
+        await filter.expandBrandSearchFilter(Timeout.MIDDLE);
+        const isProductVisible = await filter.isVisibleBrandById(ProductTestID.SAMSUNG, Timeout.EXTENSIVE);
         expect(
             isProductVisible,
             `Expected name "${brandName} id ${ProductTestID.SAMSUNG}" to be presented`
@@ -59,7 +60,7 @@ test(title, async ({page}) => {
             await filter.isVisibleFilter(Timeout.EXTENSIVE),
             'Expected button "Филтрирай" to be presented'
         ).toEqual(true);
-        await filter.clickFilter({timeout: Timeout.SMALL});
+        await filter.clickFilter(Timeout.SMALL);
         expect(
             await home.getHeadingName('Мобилни телефони ' + brandName),
             'Expected Title "Мобилни телефони ' + brandName + '" to be presented'
@@ -85,12 +86,12 @@ test(title, async ({page}) => {
     await allure.step("Navigate to page 2 and check if the brand name is contained in the card's title", async () => {
         logger.logStep("Navigate to page 2 and check if the brand name is contained in the card's title");
         expect(
-            await pagination.getPageNumerLink( 2, {timeout: Timeout.EXTENSIVE}),
+            await pagination.getPageNumerLink( 2, Timeout.EXTENSIVE),
             'Expected pagination button for page "2" to be presented'
         ).toBe(true);
-        await pagination.clickPageNumerLink( 2, {timeout: Timeout.MIDDLE});
+        await pagination.clickPageNumerLink( 2, Timeout.MIDDLE);
         expect(
-            await pagination.isActivePageNumer(2, {timeout: Timeout.HUGE}),
+            await pagination.isActivePageNumer(2, Timeout.HUGE),
             'Expected active page with number "2" to be presented'
         ).toBe(true);
         //Get all card titles from the page 2 and compare it to the brand name

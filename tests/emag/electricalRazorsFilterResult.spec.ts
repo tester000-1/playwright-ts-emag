@@ -38,8 +38,8 @@ test(title, async ({page}) => {
 
     await allure.step("Navigate to Ел. самобръсначки", async () => {
         logger.logStep("Navigate to Ел. самобръсначки");
-        await nav.clickLocator( ' Здраве и красота', {timeout: Timeout.MIDDLE});
-        await nav.clickLinkLocatorExactName( 'Ел. самобръсначки', true, {timeout: Timeout.MIDDLE});
+        await nav.clickLocator( ' Здраве и красота', Timeout.MIDDLE);
+        await nav.clickLinkLocatorExactName( 'Ел. самобръсначки', true, Timeout.MIDDLE);
         await expect( await home.getProductHeader( 'Ел. самобръсначки'),
             'Expected title: Ел. самобръсначки')
             .toBeVisible({timeout: Timeout.EXTENSIVE});
@@ -47,7 +47,7 @@ test(title, async ({page}) => {
 
     await allure.step("Filter by brand name: " + brandName, async () => {
         logger.logStep("Filter by brand name: " + brandName);
-        await filter.expandBrandSearchFilter({timeout: Timeout.MIDDLE});
+        await filter.expandBrandSearchFilter(Timeout.MIDDLE);
         const isBrandVisibleOnFilter = await filter.isVisibleBrandById(ProductTestID.BRAUN);
         expect(
             isBrandVisibleOnFilter,
@@ -58,7 +58,7 @@ test(title, async ({page}) => {
             await filter.isVisibleFilter(Timeout.EXTENSIVE),
             'Expected button "Филтрирай" to be presented'
         ).toEqual(true);
-        await filter.clickFilter({timeout: Timeout.SMALL});
+        await filter.clickFilter(Timeout.SMALL);
         expect(
             await home.getHeadingName('Ел. самобръсначки ' + brandName, Timeout.EXTENSIVE),
             'Expected Title "Ел. самобръсначки ' + brandName + '" to be presented'
@@ -86,13 +86,13 @@ test(title, async ({page}) => {
         logger.logStep("Check if the brand name is exist on the card's title, page 2");
         //Navigate to page 2
         expect(
-            await pagination.getPageNumerLink( 2, {timeout: Timeout.EXTENSIVE}),
+            await pagination.getPageNumerLink( 2, Timeout.EXTENSIVE),
             'Expected pagination button for page "2" to be presented'
         ).toBe(true);
-        await pagination.clickPageNumerLink( 2, {timeout: Timeout.MIDDLE});
+        await pagination.clickPageNumerLink( 2, Timeout.MIDDLE);
         //Check if the page 2 is active
         expect(
-            await pagination.isActivePageNumer( 2, {timeout: Timeout.HUGE}),
+            await pagination.isActivePageNumer( 2, Timeout.HUGE),
             'Expected active page with number "2" to be presented'
         ).toEqual(true);
         //Get all card titles from the page 2 and compare it to the brand name

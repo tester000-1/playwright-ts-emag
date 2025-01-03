@@ -51,11 +51,11 @@ test(title, async ({ page }) => {
   await allure.step("Open a new tab to Instagram social network", async () => {
     logger.logStep("Open a new tab to Instagram social network");
     const page3Promise = page.waitForEvent('popup');
-    await socialMediaPage.clickInstagramLink(page, {timeout: Timeout.MIDDLE});
+    await socialMediaPage.clickInstagramLink(page, Timeout.MIDDLE);
     const page3 = await page3Promise;
     //https://www.instagram.com/emag.bg_official/
-    await socialMediaPage.acceptAllCookiesInstagram(page3, {timeout: Timeout.EXTRA_EXTENSIVE});
-    await socialMediaPage.acceptCookiesCloseBtnInstagram(page3,{timeout: Timeout.MIDDLE});
+    await socialMediaPage.acceptAllCookiesInstagram(page3, Timeout.EXTRA_EXTENSIVE);
+    await socialMediaPage.acceptCookiesCloseBtnInstagram(page3,Timeout.MIDDLE);
     expect(
         page3.url(),
         'Expected correct URL for Instagram to be presented'

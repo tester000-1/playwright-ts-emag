@@ -3,5 +3,6 @@ export const enum Timeout {
     MIDDLE = 8000,
     EXTENSIVE = 12000,
     EXTRA_EXTENSIVE = 18000,
-    HUGE = 30000
+    HUGE = 24000,
+    DEFAULT = 30000
 }

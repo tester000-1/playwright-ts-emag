@@ -29,6 +29,12 @@ class CardView {
         return await page.locator('//div[@id="card_grid"]//p[@class="product-new-price"]').all();
     }
 
+    async getFirstCardViewTitle(page: Page){
+        return await page.locator('//div[@id="card_grid"]//h2[@class="card-v2-title-wrapper"]')
+            .first()
+            .innerText();
+    }
+
 }
 
 export default CardView;

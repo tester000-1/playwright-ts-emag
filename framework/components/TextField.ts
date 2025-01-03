@@ -1,11 +1,12 @@
 import BaseElement from "../BaseElement";
 import Logger from "../Logger";
+import {Locator} from "@playwright/test";
 
 
 
 class TextBox extends BaseElement {
 
-    constructor(name: string, locator: any, logger: Logger) {
+    constructor(name: string, locator: Locator, logger: Logger) {
         super(name, locator, logger);
     }
 
@@ -19,7 +20,7 @@ class TextBox extends BaseElement {
         this.logger.debug(`Type in a text field: ${this.name}`);
         const text = await this.locator.inputValue();
         this.logger.debug(`Text field: ${this.name} with text: ${text}`);
-        return await text;
+        return text;
     }
 
     async clearText(){

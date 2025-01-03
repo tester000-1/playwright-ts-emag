@@ -5,6 +5,7 @@ import {Timeout} from "../utils/Timeout";
 import Label from "../framework/components/Label";
 import CustomDropdown from "./CustomDropdown";
 import Button from "../framework/components/Button";
+import {ProductTestID} from "../utils/ProductsTestID";
 
 
 class Filter {
@@ -13,14 +14,14 @@ class Filter {
     private brandSearchFilter: Link;
     private brandName: Link;
 
-    constructor(logger: any, page: Page) {
+    constructor(logger: Logger, page: Page) {
         this.page = page;
         this.logger = logger;
         this.brandSearchFilter = new Link('Link: виж повече', this.page.getByRole('link', {name: 'виж повече'}).nth(1), this.logger);
         this.brandName = new Link('Link for brand name', null, this.logger);
     }
 
-    async expandBrandSearchFilter(timeout?) {
+    async expandBrandSearchFilter(timeout?: Timeout) {
         await this.brandSearchFilter.waitUntilAttachedToDOM();
         const isVisible = this.brandSearchFilter.isVisible();
         if (!isVisible) {
@@ -34,33 +35,33 @@ class Filter {
             this.page.getByRole('link', {name: brandName}).nth(1),
             this.logger);
         await this.brandName.setName('Link: brand name ' + brandName);
-        await this.brandName.setLocator(link.getLocator());
+        await this.brandName.setLocator(await link.getLocator());
         return await this.brandName.getLocator();
     }
 
-    async isVisibleBrandById(id, timeout?) {
+    async isVisibleBrandById(id: ProductTestID, timeout?: Timeout) {
         const brand = new Link(`Brand ID: ${id}`,
             this.page.locator('//a[@data-option-id="' + id + '"]').nth(1),
             this.logger);
         return await brand.isVisible(timeout);
     }
 
-    async clickBrandByTestId(id: any, timeout?: number) {
+    async clickBrandByTestId(id: ProductTestID, timeout?: Timeout) {
         const button = new Link(`Brand button: ${await this.brandName.getName()}`,
             this.page.locator('//a[@data-option-id="' + id + '"]').nth(1),
             this.logger);
-        await button.isVisible(Timeout.HUGE);
-        await button.click(Timeout.SMALL);
+        await button.isVisible();
+        await button.click(timeout);
     }
 
-    async isVisibleFilter(timeout?: number) {
+    async isVisibleFilter(timeout?: Timeout) {
         const filterBtn = new Button("Filter button",
             this.page.locator('//div[@class="filter-footer"]//button[1]'),
             this.logger);
-        return await filterBtn.isVisible({timeout});
+        return await filterBtn.isVisible(timeout);
     }
 
-    async clickFilter(timeout?) {
+    async clickFilter(timeout?: Timeout) {
         const filterBtn = new Link('Filter button',
             this.page.locator('//div[@class="filter-footer"]//button[1]'),
             this.logger);
@@ -68,32 +69,32 @@ class Filter {
         await filterBtn.click(timeout);
     }
 
-    async isVisibleDropdownSortingButton(timeout?: number) {
+    async isVisibleDropdownSortingButton(timeout?: Timeout) {
         const dropdown = new CustomDropdown("Dropdown: sort product by 'Най-популярни'",
             this.page.locator('(//span[text()="Най-популярни"])[1]'),
             this.logger);
-        return await dropdown.isVisible({timeout});
+        return await dropdown.isVisible(timeout);
     }
 
-    async clickDropdownSortingButton(timeout?) {
+    async clickDropdownSortingButton(options?: Object) {
         const locator = new Label('dropdown "Най-популярни"',
             this.page.locator('(//span[text()="Най-популярни"])[1]'),
             this.logger);
-        await locator.click(timeout);
+        await locator.click(options);
     }
 
-    async isVisibleFromLowToHigh(timeout?: number) {
+    async isVisibleFromLowToHigh(timeout?: Timeout) {
         const select = new Label("Dropdown: Цена възх.",
             this.page.locator('(//a[text()="Цена възх."])[1]'),
             this.logger);
-        return await select.isVisible({timeout});
+        return await select.isVisible(timeout);
     }
 
-    async clickFromLowToHigh(timeout?) {
+    async clickFromLowToHigh(options?: Object) {
         const link = new Link("Dropdown 'Цена възх'",
             this.page.getByRole('link', {name: 'Цена възх.'}).first(),
             this.logger);
-        await link.click(timeout);
+        await link.click(options);
     }
 
 }

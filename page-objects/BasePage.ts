@@ -1,16 +1,17 @@
 import Button from "../framework/components/Button";
 import {Page} from "@playwright/test";
+import Logger from "../framework/Logger";
 
 
 abstract class BasePage {
 
-    protected logger: any;
+    protected logger: Logger;
     protected page: Page;
     protected btnAcceptCookies: Button;
     protected btnCloseEnterInYourAccount: Button;
     protected btnCloseBanner: Button;
 
-    constructor(logger: any, page: Page) {
+    constructor(logger: Logger, page: Page) {
         this.page = page;
         this.logger = logger;
         this.btnAcceptCookies = new Button('Button "Приеми всички"', this.page.getByRole('button', { name: 'Приеми всички' }), this.logger);
@@ -30,7 +31,7 @@ abstract class BasePage {
         await this.btnCloseBanner.click();
     }
 
-    async getTextElement(text){
+    async getTextElement(text: string){
         return this.page.getByText(text);
     }
 

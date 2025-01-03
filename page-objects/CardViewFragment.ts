@@ -1,6 +1,6 @@
-import { Page } from "@playwright/test";
-import {Logger} from "log4js";
+import {Page} from "@playwright/test";
 import {Timeout} from "../utils/Timeout";
+import Logger from "../framework/Logger";
 
 class CardViewFragment {
 
@@ -8,7 +8,7 @@ class CardViewFragment {
     private page: Page | undefined;
     private logger: Logger | undefined;
 
-    constructor(page: Page, index: number, logger: any) {
+    constructor(page: Page, index: number, logger: Logger) {
         this.index = index;
         this.page = page;
         this.logger = logger;
