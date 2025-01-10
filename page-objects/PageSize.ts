@@ -1,0 +1,5 @@
+export const enum PageSize {
+    DEFAULT_PAGINATION_NUMBER = 60,
+    MIDDLE_PAGINATION_NUMBER = 80,
+    MAX_PAGINATION_NUMBER = 100
+}

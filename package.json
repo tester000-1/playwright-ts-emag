@@ -2,16 +2,22 @@
   "name": "playwright-emag-nodejs",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "gen-logs": "allure generate ./allure-results --clean"
+  },
   "keywords": [],
   "author": "Martin Atanasov",
   "license": "ISC",
   "description": "playwright, node.js project for Emag's website",
   "devDependencies": {
-    "@playwright/test": "^1.48.2",
-    "@types/node": "^22.7.9"
+    "@playwright/test": "^1.48.1",
+    "@types/node": "^22.7.9",
+    "allure-playwright": "^3.0.6",
+    "allure-commandline": "^2.32.0"
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.4.5",
+    "log4js": "^6.9.1"
   }
 }

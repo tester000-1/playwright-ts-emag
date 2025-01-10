@@ -1,0 +1,14 @@
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+commands.txt
+.idea
+test-examples/
+logs/
+allure-report/
+allure-results/
+tests-examples/
+tests/hook/
+
